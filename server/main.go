@@ -27,15 +27,13 @@ func main() {
 	caCertPool := x509.NewCertPool()
 	caCertPool.AppendCertsFromPEM(caCert)
 
-	tlsConfig := &tls.Config{
-		ClientAuth: tls.RequireAndVerifyClientCert,
-		ClientCAs:  caCertPool,
-	}
-
 	server := &http.Server{
-		Addr:      ":8443",
-		Handler:   http.HandlerFunc(helloHandler),
-		TLSConfig: tlsConfig,
+		Addr:    ":8443",
+		Handler: http.HandlerFunc(helloHandler),
+		TLSConfig: &tls.Config{
+			ClientAuth: tls.RequireAndVerifyClientCert,
+			ClientCAs:  caCertPool,
+		},
 	}
 
 	log.Println("Starting server on https://localhost:8443")
